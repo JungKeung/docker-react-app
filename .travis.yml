@@ -10,7 +10,22 @@ before_install:
   - docker build -t jungkeung0117/docker-react-app -f dockerfile.dev .
 
 script:
-  - docker run -e CI=true jungkeung0117/docker-react-app npm run test --
+  - docker run -e CI=true jungkeung0117/docker-react-app npm run test -- --converage
 
 after_success:
-  - echo "Test success"
+  - echo "Test Success"
+
+# 배포 관련
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-norheast-2"
+  app: "docker-react-app"
+  env: "DockerReactApp-env"
+  # S3 이미지 이름
+  bucket_name: "elasticbeanstalk-ap-northeast-2-889722733980"
+  bucket_path: "docker-react-app"
+  on:
+    #branch할떄 master branch일때만 배포를 하겠다
+    branch: master
+access_key_id: $AWS_ACCESS_KEY
+secret_access_key: $AWS_SECRET_ACCESS_KEY
